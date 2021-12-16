@@ -1,0 +1,34 @@
+{
+  "name": "body-data",
+  "version": "1.0.0",
+  "description": "一个轻量、小巧的Node.js模块，用于检索 GET 或 POST 请求数据 | A lightweight, small Node.js module for retrieving GET or POST request data",
+  "main": "index.js",
+  "scripts": {
+    "test": "mocha",
+    "lint": "eslint --fix . && prettier --check --write .",
+    "lint:check": "eslint . && prettier --check ."
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/lete114/body-data.git"
+  },
+  "keywords": [
+    "body",
+    "data",
+    "post",
+    "get",
+    "request"
+  ],
+  "author": "Lete乐特",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/lete114/body-data/issues"
+  },
+  "homepage": "https://github.com/lete114/body-data#readme",
+  "devDependencies": {
+    "axios": "^0.24.0",
+    "eslint": "^8.4.1",
+    "mocha": "^9.1.3",
+    "prettier": "^2.5.1"
+  }
+}
