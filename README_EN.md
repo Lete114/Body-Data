@@ -24,7 +24,7 @@ npm install Body-Data --save
 ```js
 // client
 const script = document.createElement('script')
-script.src='https://cdn.jsdelivr.net/npm/axios/dist/axios.js'
+script.src = 'https://cdn.jsdelivr.net/npm/axios/dist/axios.js'
 document.head.append(script)
 
 const url = 'http://127.0.0.1:6870'
@@ -35,8 +35,8 @@ axios.post(url, { name: 'Lete', age: 18 })
 const bodyData = require('body-data')
 const http = require('http')
 
-const server = http.createServer(async (req,res)=>{
-  res.setHeader('Content-Type','application/json; charset:utf-8;')
+const server = http.createServer(async (req, res) => {
+  res.setHeader('Content-Type', 'application/json; charset:utf-8;')
   const data = await bodyData(req)
   res.end(JSON.stringify(data)) // output: { name: 'Lete', age: 18 }
 })

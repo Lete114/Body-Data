@@ -1,12 +1,12 @@
 {
   "name": "body-data",
-  "version": "1.0.0",
+  "version": "1.0.2",
   "description": "一个轻量、小巧的Node.js模块，用于检索 GET 或 POST 请求数据 | A lightweight, small Node.js module for retrieving GET or POST request data",
   "main": "index.js",
   "scripts": {
-    "test": "mocha",
-    "lint": "eslint --fix . && prettier --check --write .",
-    "lint:check": "eslint . && prettier --check ."
+    "test": "npx mocha",
+    "lint": "eslint . && prettier --check .",
+    "lint:fix": "eslint --fix . && prettier --check --write ."
   },
   "repository": {
     "type": "git",
