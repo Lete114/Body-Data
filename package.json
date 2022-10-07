@@ -1,6 +1,6 @@
 {
   "name": "body-data",
-  "version": "1.0.5",
+  "version": "1.0.6",
   "description": "一个轻量、小巧的Node.js模块，用于检索 GET 或 POST 请求数据 | A lightweight, small Node.js module for retrieving GET or POST request data",
   "main": "index.js",
   "typings": "index.d.ts",
