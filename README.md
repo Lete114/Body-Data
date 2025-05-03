@@ -1,45 +1,203 @@
-<div align="right">
-  语言:
-  中文
-  <a title="English" href="/README_EN.md">English</a>
-</div>
+# 📦 body-data
 
-<h1 align="center"><a href="https://github.com/lete114/Body-Data" target="_blank">Body-Data</a></h1>
-<p align="center">一个轻量、小巧的Node.js模块，用于检索 GET 或 POST 请求数据</p>
+[![visitors][visitors-src]][visitors-href]
+[![npm version][npm-version-src]][npm-version-href]
+[![npm downloads][npm-downloads-src]][npm-downloads-href]
+[![bundle][bundle-src]][bundle-href]
+[![JSDocs][jsdocs-src]][jsdocs-href]
+[![License][license-src]][license-href]
 
-<p align="center">
-    <a href="https://github.com/Lete114/Body-Data/releases/"><img src="https://img.shields.io/npm/v/body-data" alt="Version"></a>
-    <a href="https://github.com/Lete114/Body-Data/tree/main"><img src="https://img.shields.io/github/package-json/v/Lete114/Body-Data/main?color=%231ab1ad&label=main" alt="dev"></a>
-    <a href="https://github.com/Lete114/Body-Data/blob/master/LICENSE"><img src="https://img.shields.io/github/license/Lete114/Body-Data?color=FF5531" alt="MIT License"></a>
-</p>
+A lightweight Node.js utility to extract query parameters and request body data from `IncomingMessage`. Supports common `Content-Type` formats and safe fallbacks.
 
-## 安装
+## ✨ Features
+
+- ✅ Extract query parameters from `GET` requests
+- ✅ Parse request body from `POST` requests
+- ✅ Supports `application/json`, `x-www-form-urlencoded`, `text/plain`, `multipart/form-data`, and others
+- ✅ Safe fallback parsing
+- ✅ Zero dependencies
+
+---
+
+## 📦 Installation
 
 ```bash
-npm install body-data --save
-```
+npm install body-data
+# or
+pnpm add body-data
+````
 
-## 快速开始
+---
 
-```js
-// client
-const script = document.createElement('script')
-script.src = 'https://cdn.jsdelivr.net/npm/axios/dist/axios.js'
-document.head.append(script)
+## 🚀 Usage Examples
 
-const url = 'http://127.0.0.1:6870'
-axios.get(url, { params: { name: 'Lete', age: 18 } })
-axios.post(url, { name: 'Lete', age: 18 })
+### 1. Using `bodyData`
 
-// server
-const bodyData = require('body-data')
-const http = require('http')
+`bodyData` is a high-level utility that returns both `params` (query) and `body` data.
 
-const server = http.createServer(async (req, res) => {
-  res.setHeader('Content-Type', 'application/json; charset:utf-8;')
+```ts
+import http from 'node:http'
+import { bodyData } from 'body-data'
+
+http.createServer(async (req, res) => {
   const data = await bodyData(req)
-  res.end(JSON.stringify(data)) // output: { name: 'Lete', age: 18 }
-})
 
-server.listen(6870)
+  res.setHeader('Content-Type', 'application/json')
+  res.end(JSON.stringify(data))
+}).listen(3000)
 ```
+
+**Request Example:**
+
+```bash
+curl "http://localhost:3000?name=lete&age=18" \
+  -X POST \
+  -H "Content-Type: application/json" \
+  -d '{"gender":"male"}'
+```
+
+**Response:**
+
+```json
+{
+  "params": {
+    "name": "lete",
+    "age": "18"
+  },
+  "body": {
+    "gender": "male"
+  }
+}
+```
+
+---
+
+### 2. Using `getParams`
+
+Use `getParams` to only extract query parameters from the URL.
+
+```ts
+import http from 'node:http'
+import { getParams } from 'body-data'
+
+http.createServer((req, res) => {
+  const params = getParams(req)
+
+  res.setHeader('Content-Type', 'application/json')
+  res.end(JSON.stringify({ params }))
+}).listen(3000)
+```
+
+**Request Example:**
+
+```bash
+curl "http://localhost:3000?foo=bar&count=10"
+```
+
+**Response:**
+
+```json
+{
+  "params": {
+    "foo": "bar",
+    "count": "10"
+  }
+}
+```
+
+---
+
+### 3. Using `getBody`
+
+Use `getBody` to only extract the body from a `POST` request.
+
+```ts
+import http from 'node:http'
+import { getBody } from 'body-data'
+
+http.createServer(async (req, res) => {
+  const body = await getBody(req)
+
+  res.setHeader('Content-Type', 'application/json')
+  res.end(JSON.stringify({ body }))
+}).listen(3000)
+```
+
+**Request Example:**
+
+```bash
+curl "http://localhost:3000" \
+  -X POST \
+  -H "Content-Type: application/x-www-form-urlencoded" \
+  -d "username=test&password=1234"
+```
+
+**Response:**
+
+```json
+{
+  "body": {
+    "username": "test",
+    "password": "1234"
+  }
+}
+```
+
+---
+
+## 📖 API Reference
+
+### `bodyData(req: IncomingMessage): Promise<{ params, body }>`
+
+Returns an object with:
+
+* `params`: Query parameters (from URL)
+* `body`: Parsed request body
+
+### `getParams(req: IncomingMessage): Record<string, any>`
+
+Parses the query string from the request URL.
+
+### `getBody(req: IncomingMessage): Promise<Record<string, any>>`
+
+Parses the body of the request based on `Content-Type`. Supports:
+
+* `application/json`
+* `application/x-www-form-urlencoded`
+* `text/plain`
+* `multipart/form-data` (returns raw string)
+* Fallback: returns `{ raw: string }`
+
+---
+
+## 🧪 Testing
+
+```bash
+pnpm test
+```
+
+---
+
+## 📄 License
+
+[MIT](./LICENSE) License © [Lete114](https://github.com/lete114)
+
+<!-- Badges -->
+
+[visitors-src]: https://visitor-badge.imlete.cn/?id=github.Lete114/body-data&labelColor=080f12&color=1fa669&type=pv&style=flat
+[visitors-href]: https://github.com/Lete114/visitor-badge
+
+[npm-version-src]: https://img.shields.io/npm/v/body-data?style=flat&colorA=080f12&colorB=1fa669
+[npm-version-href]: https://npmjs.com/package/body-data
+
+[npm-downloads-src]: https://img.shields.io/npm/dm/body-data?style=flat&colorA=080f12&colorB=1fa669
+[npm-downloads-href]: https://npmjs.com/package/body-data
+
+[bundle-src]: https://img.shields.io/bundlephobia/minzip/body-data?style=flat&colorA=080f12&colorB=1fa669&label=minzip
+[bundle-href]: https://bundlephobia.com/result?p=body-data
+
+[license-src]: https://img.shields.io/github/license/Lete114/body-data.svg?style=flat&colorA=080f12&colorB=1fa669
+[license-href]: https://github.com/Lete114/body-data/blob/main/LICENSE
+
+[jsdocs-src]: https://img.shields.io/badge/jsdocs-reference-080f12?style=flat&colorA=080f12&colorB=1fa669
+[jsdocs-href]: https://www.jsdocs.io/package/body-data

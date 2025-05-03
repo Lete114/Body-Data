@@ -1,0 +1,4 @@
+.:
+  bodyData: function
+  getBody: function
+  getParams: function

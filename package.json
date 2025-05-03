@@ -1,35 +1,70 @@
 {
   "name": "body-data",
-  "version": "1.0.7",
+  "type": "module",
+  "version": "2.0.0",
   "description": "一个轻量、小巧的Node.js模块，用于检索 GET 或 POST 请求数据 | A lightweight, small Node.js module for retrieving GET or POST request data",
-  "main": "index.js",
-  "typings": "index.d.ts",
-  "scripts": {
-    "test": "npx mocha",
-    "lint": "npx eslint . && npx prettier --check .",
-    "lint:fix": "npx eslint --fix . && npx prettier --check --write ."
-  },
+  "author": "Lete114 <me@imlete.cn>",
+  "license": "MIT",
+  "homepage": "https://github.com/Lete114/Body-Data#readme",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/Lete114/Body-Data.git"
+  },
+  "bugs": {
+    "url": "https://github.com/Lete114/Body-Data/issues"
   },
   "keywords": [
     "body",
     "data",
     "post",
     "get",
-    "request"
+    "request",
+    "parse",
+    "params"
   ],
-  "author": "Lete乐特",
-  "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/Lete114/Body-Data/issues"
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.mts",
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.cjs"
+    },
+    "./package.json": "./package.json"
   },
-  "homepage": "https://github.com/Lete114/Body-Data#readme",
+  "main": "./dist/index.mjs",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.mts",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "unbuild",
+    "dev": "unbuild --stub",
+    "lint": "eslint",
+    "prepublishOnly": "pnpm build",
+    "start": "tsx src/index.ts",
+    "test": "vitest",
+    "typecheck": "tsc --noEmit",
+    "prepare": "simple-git-hooks"
+  },
   "devDependencies": {
-    "axios": "^0.24.0",
-    "eslint": "^7.32.0",
-    "mocha": "^9.2.2",
-    "prettier": "^2.5.1"
+    "@antfu/eslint-config": "catalog:cli",
+    "@types/node": "catalog:types",
+    "eslint": "catalog:cli",
+    "lint-staged": "catalog:cli",
+    "simple-git-hooks": "catalog:cli",
+    "tinyexec": "catalog:utils",
+    "tsx": "catalog:cli",
+    "typescript": "catalog:cli",
+    "unbuild": "catalog:cli",
+    "vite": "catalog:cli",
+    "vitest": "catalog:testing",
+    "vitest-package-exports": "catalog:testing",
+    "yaml": "catalog:testing"
+  },
+  "simple-git-hooks": {
+    "pre-commit": "pnpm i --frozen-lockfile --ignore-scripts --offline && npx lint-staged"
+  },
+  "lint-staged": {
+    "*": "eslint --fix"
   }
 }
