@@ -1,8 +1,8 @@
 {
   "name": "body-data",
   "type": "module",
-  "version": "2.0.0",
-  "description": "一个轻量、小巧的Node.js模块，用于检索 GET 或 POST 请求数据 | A lightweight, small Node.js module for retrieving GET or POST request data",
+  "version": "2.0.1",
+  "description": "A lightweight Node.js utility to extract query parameters and request body data from `IncomingMessage`. Supports common `Content-Type` formats and safe fallbacks.",
   "author": "Lete114 <me@imlete.cn>",
   "license": "MIT",
   "homepage": "https://github.com/Lete114/Body-Data#readme",
