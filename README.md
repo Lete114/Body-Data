@@ -16,8 +16,7 @@ A lightweight Node.js utility to extract query parameters and request body data 
 - ✅ Supports `application/json`, `x-www-form-urlencoded`, `text/plain`, `multipart/form-data`, and others
 - ✅ Safe fallback parsing
 - ✅ Zero dependencies
-
----
+- ✅ Configurable parsing options: encoding, content-type override, raw mode, and custom error handling
 
 ## 📦 Installation
 
@@ -168,7 +167,27 @@ Parses the body of the request based on `Content-Type`. Supports:
 * `multipart/form-data` (returns raw string)
 * Fallback: returns `{ raw: string }`
 
----
+#### Options (`IBodyOptions`):
+
+| Option            | Type                   | Description                                                 |
+| ----------------- | ---------------------- | ----------------------------------------------------------- |
+| `raw`             | `boolean`              | Return raw body string instead of parsing. Default: `false` |
+| `encoding`        | `BufferEncoding`       | Text encoding for reading the body. Default: `'utf-8'`      |
+| `contentType`     | `string`               | Force a specific `Content-Type` (overrides request headers) |
+| `backContentType` | `string`               | Fallback `Content-Type` when none is provided               |
+| `onError`         | `(err: Error) => void` | Custom error handler for parse or stream errors             |
+
+## ✅ Example with Custom Options
+
+```ts
+const body = await getBody(req, {
+  raw: false,
+  encoding: 'utf-8',
+  contentType: 'application/json',
+  backContentType: 'text/plain',
+  onError: err => console.error('Body parse error:', err),
+})
+```
 
 ## 🧪 Testing
 

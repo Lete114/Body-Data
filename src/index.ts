@@ -1,25 +1,30 @@
 import type { IncomingMessage } from 'node:http'
+import type { IBodyOptions, IOptions } from './type'
 import { Buffer } from 'node:buffer'
 
+export * from './type'
+
 /**
- * Get the request data content
- * @param { IncomingMessage } req Request object
- * @returns { Promise<{ params: Record<string, any>; body: Record<string, any> }> } return data
+ * Extract both query parameters and request body data from an HTTP request.
+ *
+ * @param {IncomingMessage} req - The Node.js HTTP request object.
+ * @param {IOptions} [options] - Optional settings for parsing the request body.
+ * @returns {Promise<{ params: Record<string, any>; body: Record<string, any> }>} An object containing `params` and `body`.
  */
-export async function bodyData(req: IncomingMessage): Promise<{ params: Record<string, any>, body: Record<string, any> }> {
+export async function bodyData(req: IncomingMessage, options: IOptions = {}): Promise<{ params: Record<string, any>, body: Record<string, any> }> {
   return {
     params: getParams(req),
-    body: await getBody(req),
+    body: await getBody(req, options),
   }
 }
 
 /**
- * Get get request data
- * @param { IncomingMessage } req Request object
- * @returns { Record<string,any> } return data
+ * Extract query parameters from a GET or URL-based request.
+ *
+ * @param {IncomingMessage} req - The Node.js HTTP request object.
+ * @returns {Record<string, any>} A key-value map of the URL query parameters.
  */
 export function getParams(req: IncomingMessage): Record<string, any> {
-  // if not directly return the empty object
   if (!req.url)
     return {}
 
@@ -28,22 +33,41 @@ export function getParams(req: IncomingMessage): Record<string, any> {
 }
 
 /**
- * Get post request data
- * @param { IncomingMessage } req Request object
- * @returns { Promise<Record<string,any>> } return data
+ * Extract and parse the request body from a POST/PUT request.
+ *
+ * @param {IncomingMessage} req - The Node.js HTTP request object.
+ * @param {IBodyOptions} [options] - Options to control body parsing behavior.
+ * @returns {Promise<Record<string, any>>} Parsed body data, or raw string if `raw` is enabled or unsupported content-type.
+ *
+ * Supports:
+ * - `application/json`
+ * - `application/x-www-form-urlencoded`
+ * - `text/plain`
+ * - `multipart/form-data` (returns raw body string)
  */
-export function getBody(req: IncomingMessage): Promise<Record<string, any>> {
+export function getBody(req: IncomingMessage, options: IBodyOptions = {}): Promise<Record<string, any>> {
   return new Promise((resolve) => {
     const chunks: Uint8Array[] = []
+    req.on('error', (err) => {
+      if (options.onError) {
+        options.onError(err)
+      }
+      resolve({})
+    })
     req.on('data', chunk => chunks.push(chunk))
     req.on('end', () => {
-      const buffer = Buffer.concat(chunks).toString()
-      const contentType = req.headers['content-type'] || ''
+      const encoding = options.encoding || 'utf-8'
+      const buffer = Buffer.concat(chunks).toString(encoding)
 
       if (!buffer) {
         return resolve({})
       }
 
+      if (options.raw) {
+        return resolve({ raw: buffer })
+      }
+
+      const contentType = options.contentType || req.headers['content-type'] || options.backContentType || ''
       try {
         if (contentType.startsWith('application/json')) {
           return resolve(JSON.parse(buffer))
@@ -64,8 +88,10 @@ export function getBody(req: IncomingMessage): Promise<Record<string, any>> {
         // fallback
         resolve({ raw: buffer })
       }
-      catch (error) {
-        console.error(`body-data "getBody" error: ${error}`)
+      catch (err) {
+        if (options.onError) {
+          options.onError(err)
+        }
         resolve({})
       }
     })
