@@ -1,4 +1,4 @@
-const bodyData = require('body-data')
+const { bodyData } = require('body-data')
 
 module.exports = async (req, res) => {
   res.setHeader('Content-Type','application/json; charset:utf-8;')
